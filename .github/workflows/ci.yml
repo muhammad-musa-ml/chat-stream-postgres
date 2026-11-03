@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests and an end-to-end check
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: chat
+          POSTGRES_PASSWORD: chat
+          POSTGRES_DB: chat_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U chat -d chat_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://chat:chat@localhost:5432/chat_test
+      DATABASE_URL: postgresql://chat:chat@localhost:5432/chat_test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+      - name: Install
+        run: pip install -r backend/requirements-dev.txt
+      - name: Tests (a scripted model server, real Postgres)
+        working-directory: backend
+        run: python -m pytest -q
+      - name: README tables match the result files
+        run: python bench/summarize.py --check
+      - name: End to end over HTTP against the fake model server, in both API shapes
+        run: |
+          python bench/fake_upstream.py --port 9100 > "$RUNNER_TEMP/fake.log" 2>&1 &
+          start_backend() {
+            (cd backend && OPENAI_BASE_URL=http://127.0.0.1:9100/v1 MODEL=fake API_STYLE="$1" \
+              python -m uvicorn app.main:create_app --factory --port "$2" > "$RUNNER_TEMP/$1.log" 2>&1 &)
+            for i in $(seq 1 30); do curl -sf "http://127.0.0.1:$2/api/health" && echo && return 0; sleep 1; done
+            cat "$RUNNER_TEMP/$1.log"
+            return 1
+          }
+          start_backend responses 8000
+          start_backend chat_completions 8001
+          python bench/latency.py --base-url http://127.0.0.1:8000 --repeats 1 --label ci-responses --out "$RUNNER_TEMP/responses.json"
+          python bench/latency.py --base-url http://127.0.0.1:8001 --repeats 1 --label ci-chat-completions --out "$RUNNER_TEMP/chat.json"
+
+  frontend:
+    name: Frontend typecheck, tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
