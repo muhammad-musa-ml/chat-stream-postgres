@@ -1,5 +1,7 @@
 """The model-server client, against a scripted fake. No database needed."""
 
+from pathlib import Path
+
 import httpx
 import pytest
 from fakes import FakeModelServer, chat_script, make_settings, responses_delta, responses_script, sse_event
@@ -9,6 +11,9 @@ from app.upstream import Finished, TextDelta, UpstreamError, iter_sse, stream_re
 pytestmark = pytest.mark.anyio
 
 HISTORY = [{"role": "user", "content": "hi"}]
+
+# Raw streams captured from Ollama 0.40.13 serving llama3.2:3b (curl -N).
+CAPTURES = Path(__file__).with_name("data")
 
 
 async def collect(server: FakeModelServer, **overrides):
@@ -32,6 +37,32 @@ async def test_iter_sse_handles_comments_multiline_data_and_a_missing_final_blan
 async def test_responses_stream_yields_each_delta_in_order_then_usage():
     server = FakeModelServer(responses_script(["Hel", "lo", " there"]))
     assert await collect(server) == [TextDelta("Hel"), TextDelta("lo"), TextDelta(" there"), Finished(3)]
+
+
+async def test_a_captured_ollama_responses_stream_parses_to_its_text_and_usage():
+    capture = (CAPTURES / "ollama-responses-stream.txt").read_text(encoding="utf-8")
+    events = await collect(FakeModelServer([capture]))
+    assert events[:-1] == [TextDelta(t) for t in ["Hello", " from", " the", " digital", " realm", "."]]
+    assert events[-1] == Finished(7)
+
+
+async def test_a_captured_ollama_chat_completions_stream_parses_to_its_text_and_usage():
+    capture = (CAPTURES / "ollama-chat-completions-stream.txt").read_text(encoding="utf-8")
+    events = await collect(FakeModelServer([capture]), api_style="chat_completions")
+    assert "".join(e.text for e in events[:-1]) == "One, two, three, four,"
+    assert events[-1] == Finished(8)
+
+
+async def test_an_incomplete_response_ends_the_reply_like_a_completed_one():
+    incomplete = sse_event(
+        "response.incomplete",
+        {
+            "type": "response.incomplete",
+            "response": {"incomplete_details": {"reason": "max_output_tokens"}, "usage": {"output_tokens": 64}},
+        },
+    )
+    server = FakeModelServer([responses_delta("cut"), incomplete])
+    assert await collect(server) == [TextDelta("cut"), Finished(64)]
 
 
 async def test_responses_request_carries_history_instructions_and_token_cap():

@@ -1,0 +1,22 @@
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"role":"assistant","content":"One"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":","},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":" two"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":","},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":" three"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":","},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":" four"},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{"content":","},"finish_reason":null}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[{"index":0,"delta":{},"finish_reason":"length"}]}
+
+data: {"id":"chatcmpl-862","object":"chat.completion.chunk","created":1793684765,"model":"llama3.2:3b","system_fingerprint":"fp_ollama","choices":[],"usage":{"prompt_tokens":37,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens":8,"total_tokens":45},"timings":{"prompt_n":37,"prompt_ms":98,"prompt_per_token_ms":2.6486486486486487,"prompt_per_second":377.55102040816325,"predicted_n":8,"predicted_ms":101,"predicted_per_token_ms":12.625,"predicted_per_second":79.20792079207921}}
+
+data: [DONE]
+

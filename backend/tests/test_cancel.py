@@ -82,7 +82,9 @@ async def test_closing_the_generator_at_a_yield_stores_the_partial_reply(pool):
         assert (await anext(events)).startswith("event: meta")
         assert (await anext(events)).startswith("event: token")
         await events.aclose()
+        # Checked before anything else awaits: the upstream stream must be
+        # closed by the relay itself, not later by garbage collection.
+        assert server.closed == 1
 
     row = await stored_reply(pool)
     assert (row["content"], row["status"]) == ("Hal", "cancelled")
-    assert server.closed == 1
