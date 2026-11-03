@@ -6,7 +6,7 @@ I built it as a small, complete version of the path a chat product depends on: a
 
 ## Run it
 
-You need Docker, Python 3.12 or later (I used 3.13), Node 22 and [Ollama](https://ollama.com).
+You need Docker, Python 3.13 (the version I tested, here and in CI), Node 22 and [Ollama](https://ollama.com).
 
 ```sh
 ollama pull llama3.2:3b
