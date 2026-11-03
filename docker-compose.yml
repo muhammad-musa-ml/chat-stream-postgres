@@ -6,7 +6,8 @@ services:
       POSTGRES_PASSWORD: chat
       POSTGRES_DB: chat
     ports:
-      - "${PG_PORT:-5432}:5432"
+      # Local development only: reachable from this machine, not the network.
+      - "127.0.0.1:${PG_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       # Creates the chat_test database the backend tests use.
