@@ -26,7 +26,7 @@ class Settings:
             raise ValueError(f"API_STYLE must be one of {API_STYLES}, got {api_style!r}")
         temperature = os.environ.get("TEMPERATURE")
         return cls(
-            database_url=os.environ.get("DATABASE_URL", "postgresql://chat:chat@localhost:5432/chat"),
+            database_url=os.environ.get("DATABASE_URL", "postgresql://chat:chat@127.0.0.1:5432/chat"),
             # Ollama serves its OpenAI-compatible API under /v1 on port 11434.
             openai_base_url=os.environ.get("OPENAI_BASE_URL", "http://localhost:11434/v1").rstrip("/"),
             # Ollama ignores the key, but OpenAI-compatible servers expect the header.

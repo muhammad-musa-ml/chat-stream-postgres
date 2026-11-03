@@ -27,7 +27,7 @@ npm ci
 npm run dev
 ```
 
-Then open http://localhost:5173. Vite passes `/api` through to the backend on port 8000, so the page and the API share an origin. The backend creates its tables on startup. If port 5432 is taken, start Postgres with `PG_PORT=55432 docker compose up -d --wait` and set `DATABASE_URL=postgresql://chat:chat@localhost:55432/chat`.
+Then open http://localhost:5173. Vite passes `/api` through to the backend on port 8000, so the page and the API share an origin. The backend creates its tables on startup. If port 5432 is taken, start Postgres with `PG_PORT=55432 docker compose up -d --wait` and set `DATABASE_URL=postgresql://chat:chat@127.0.0.1:55432/chat`.
 
 ### Settings
 
@@ -44,7 +44,7 @@ All settings are environment variables read once at startup (`backend/app/config
 | `TEMPERATURE` | unset | sent only when set |
 | `HISTORY_MESSAGES` | `20` | how many earlier finished messages go to the model with each new one |
 | `UPSTREAM_TIMEOUT_S` | `60` | longest wait for the next chunk from the model server |
-| `DATABASE_URL` | `postgresql://chat:chat@localhost:5432/chat` | Postgres |
+| `DATABASE_URL` | `postgresql://chat:chat@127.0.0.1:5432/chat` | Postgres |
 
 I have run it against Ollama 0.40.13 in both API styles. I have not run it against api.openai.com or any other hosted server.
 

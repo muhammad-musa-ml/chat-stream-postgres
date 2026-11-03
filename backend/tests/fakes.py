@@ -11,7 +11,7 @@ import httpx
 from app.config import Settings
 from app.main import create_app
 
-TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql://chat:chat@localhost:5432/chat_test")
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql://chat:chat@127.0.0.1:5432/chat_test")
 
 
 def make_settings(**overrides: Any) -> Settings:

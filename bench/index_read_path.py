@@ -133,7 +133,7 @@ async def run(args: argparse.Namespace) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--database-url", default="postgresql://chat:chat@localhost:5432/chat")
+    parser.add_argument("--database-url", default="postgresql://chat:chat@127.0.0.1:5432/chat")
     parser.add_argument("--conversations", type=int, default=20_000)
     parser.add_argument("--messages-per-conversation", type=int, default=50)
     parser.add_argument("--sample", type=int, default=50, help="conversations timed per run")
