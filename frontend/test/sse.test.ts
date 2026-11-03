@@ -29,8 +29,9 @@ describe("SSEParser", () => {
     expect(parser.push("\n")).toEqual([{ event: "token", data: '{"text":"a"}' }]);
   });
 
-  it("treats a CRLF split across two chunks as one line ending", () => {
-    expect(parseInChunks(["data: one\r", "\n\r", "\n"])).toEqual([{ event: "message", data: "one" }]);
+  it("treats a CRLF split across two chunks as one line ending, not a blank line", () => {
+    // Read as CR then LF, the split would end the event after "a".
+    expect(parseInChunks(["data: a\r", "\ndata: b\r\n\r\n"])).toEqual([{ event: "message", data: "a\nb" }]);
   });
 
   it("skips comments, joins multi-line data and defaults the event name", () => {
