@@ -126,7 +126,7 @@ def main() -> None:
     result = asyncio.run(run(args))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="\n")
     s = result["summary"]
     print(
         f"{args.label}: n={s['client_ttft_ms']['n']} "

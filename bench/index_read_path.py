@@ -145,7 +145,7 @@ def main() -> None:
     result = asyncio.run(run(args))
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8", newline="\n")
     w, wo = result["with_index"]["execution_ms"], result["without_index"]["execution_ms"]
     print(
         f"with index p50 {w['p50']:.3f} ms p95 {w['p95']:.3f} ms; "
