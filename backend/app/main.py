@@ -41,7 +41,13 @@ def create_app(settings: Settings | None = None, transport: httpx.AsyncBaseTrans
 
     @app.get("/api/health")
     async def health() -> dict[str, Any]:
-        return {"ok": True, "model": settings.model, "api_style": settings.api_style}
+        return {
+            "ok": True,
+            "model": settings.model,
+            "api_style": settings.api_style,
+            "max_output_tokens": settings.max_output_tokens,
+            "temperature": settings.temperature,
+        }
 
     @app.get("/api/conversations")
     async def conversations(request: Request) -> list[dict[str, Any]]:
